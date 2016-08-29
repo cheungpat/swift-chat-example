@@ -305,10 +305,10 @@
             </objects>
             <point key="canvasLocation" x="1577" y="662"/>
         </scene>
-        <!--View Controller-->
+        <!--Create direct conversation-->
         <scene sceneID="Tta-bS-a6x">
             <objects>
-                <viewController id="IpP-qr-nP9" sceneMemberID="viewController">
+                <viewController id="IpP-qr-nP9" customClass="CreateDirectConversation" customModule="chat_demo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Xze-g2-OyZ"/>
                         <viewControllerLayoutGuide type="bottom" id="sLO-NB-lRS"/>
@@ -316,8 +316,61 @@
                     <view key="view" contentMode="scaleToFill" id="7MH-2B-ePv">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User ID" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gjf-Du-7ZQ">
+                                <rect key="frame" x="31" y="123" width="57" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="utH-r8-84W">
+                                <rect key="frame" x="118" y="118" width="452" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OP7-gw-OxC">
+                                <rect key="frame" x="277" y="285" width="46" height="30"/>
+                                <state key="normal" title="Create"/>
+                                <connections>
+                                    <action selector="createConversation:" destination="IpP-qr-nP9" eventType="touchUpInside" id="KvC-4b-8Xl"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="aky-C0-jYQ">
+                                <rect key="frame" x="20" y="174" width="560" height="66"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="OP7-gw-OxC" firstAttribute="centerX" secondItem="7MH-2B-ePv" secondAttribute="centerX" id="1P4-Sb-wk7"/>
+                            <constraint firstItem="OP7-gw-OxC" firstAttribute="top" secondItem="aky-C0-jYQ" secondAttribute="bottom" constant="45" id="5ce-zH-R07"/>
+                            <constraint firstItem="utH-r8-84W" firstAttribute="leading" secondItem="gjf-Du-7ZQ" secondAttribute="trailing" constant="30" id="6SO-O2-OLf"/>
+                            <constraint firstItem="aky-C0-jYQ" firstAttribute="leading" secondItem="7MH-2B-ePv" secondAttribute="leadingMargin" id="9x0-5f-h77"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="utH-r8-84W" secondAttribute="trailing" constant="10" id="P9s-YJ-qI1"/>
+                            <constraint firstItem="utH-r8-84W" firstAttribute="centerY" secondItem="gjf-Du-7ZQ" secondAttribute="centerY" id="R1x-u6-Cvb"/>
+                            <constraint firstItem="aky-C0-jYQ" firstAttribute="top" secondItem="utH-r8-84W" secondAttribute="bottom" constant="26" id="TEE-X1-vpi"/>
+                            <constraint firstItem="gjf-Du-7ZQ" firstAttribute="leading" secondItem="7MH-2B-ePv" secondAttribute="leadingMargin" constant="11" id="Y58-Y2-Jda"/>
+                            <constraint firstItem="utH-r8-84W" firstAttribute="top" secondItem="Xze-g2-OyZ" secondAttribute="bottom" constant="54" id="aD3-3H-vSm"/>
+                            <constraint firstItem="OP7-gw-OxC" firstAttribute="centerY" secondItem="7MH-2B-ePv" secondAttribute="centerY" id="ebw-Mo-NUh"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="aky-C0-jYQ" secondAttribute="trailing" id="mfB-xA-2b1"/>
+                            <constraint firstItem="utH-r8-84W" firstAttribute="leading" secondItem="gjf-Du-7ZQ" secondAttribute="trailing" constant="8" id="yNI-Oc-Akh"/>
+                            <constraint firstItem="utH-r8-84W" firstAttribute="top" secondItem="gjf-Du-7ZQ" secondAttribute="top" id="yNK-9l-j3Z"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="yNI-Oc-Akh"/>
+                                <exclude reference="yNK-9l-j3Z"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <navigationItem key="navigationItem" title="Create direct conversation" id="Q5B-Ho-jzU"/>
+                    <connections>
+                        <outlet property="createBtn" destination="OP7-gw-OxC" id="YeJ-xx-iBy"/>
+                        <outlet property="createdConversationTextView" destination="aky-C0-jYQ" id="YJ4-lN-OWd"/>
+                        <outlet property="userIdTextField" destination="utH-r8-84W" id="8Ux-Vc-S8L"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X6g-Fj-94Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
