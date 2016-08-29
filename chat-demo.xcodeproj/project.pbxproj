@@ -15,9 +15,10 @@
 		94A3DE8C1D701DF300B9D383 /* ServerConfigurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A3DE8B1D701DF300B9D383 /* ServerConfigurationViewController.swift */; };
 		94A3DE8E1D701E6E00B9D383 /* UserAuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A3DE8D1D701E6E00B9D383 /* UserAuthenticationViewController.swift */; };
 		94A3DE901D7024DA00B9D383 /* CurrentUserUnreadCountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A3DE8F1D7024DA00B9D383 /* CurrentUserUnreadCountViewController.swift */; };
-		94A3DE921D7043CF00B9D383 /* CreateDirectConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A3DE911D7043CF00B9D383 /* CreateDirectConversation.swift */; };
+		94A3DE921D7043CF00B9D383 /* CreateDirectConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A3DE911D7043CF00B9D383 /* CreateDirectConversationViewController.swift */; };
 		94A3DE941D7047D400B9D383 /* UsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A3DE931D7047D400B9D383 /* UsersViewController.swift */; };
 		94B3A34D1D73D3790092A29F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3A34C1D73D3790092A29F /* DetailViewController.swift */; };
+		94B3A34F1D73EC3E0092A29F /* CreateGroupConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B3A34E1D73EC3E0092A29F /* CreateGroupConversationViewController.swift */; };
 		F27FA6F74B2D5D76E8E110EE /* Pods_chat_demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4079A5538709244C86D52C6 /* Pods_chat_demo.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,9 +33,10 @@
 		94A3DE8B1D701DF300B9D383 /* ServerConfigurationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerConfigurationViewController.swift; sourceTree = "<group>"; };
 		94A3DE8D1D701E6E00B9D383 /* UserAuthenticationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAuthenticationViewController.swift; sourceTree = "<group>"; };
 		94A3DE8F1D7024DA00B9D383 /* CurrentUserUnreadCountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentUserUnreadCountViewController.swift; sourceTree = "<group>"; };
-		94A3DE911D7043CF00B9D383 /* CreateDirectConversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateDirectConversation.swift; sourceTree = "<group>"; };
+		94A3DE911D7043CF00B9D383 /* CreateDirectConversationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateDirectConversationViewController.swift; sourceTree = "<group>"; };
 		94A3DE931D7047D400B9D383 /* UsersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersViewController.swift; sourceTree = "<group>"; };
 		94B3A34C1D73D3790092A29F /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		94B3A34E1D73EC3E0092A29F /* CreateGroupConversationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateGroupConversationViewController.swift; sourceTree = "<group>"; };
 		E8729C45F1E28B4DCC0630F6 /* Pods-chat-demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chat-demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-chat-demo/Pods-chat-demo.debug.xcconfig"; sourceTree = "<group>"; };
 		F15374BDDEFF980ACE181E1A /* Pods-chat-demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chat-demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-chat-demo/Pods-chat-demo.release.xcconfig"; sourceTree = "<group>"; };
 		F4079A5538709244C86D52C6 /* Pods_chat_demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_chat_demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,7 +86,8 @@
 			children = (
 				948E0A341D6EE7B00087F860 /* AppDelegate.swift */,
 				948E0A361D6EE7B00087F860 /* MainViewController.swift */,
-				94A3DE911D7043CF00B9D383 /* CreateDirectConversation.swift */,
+				94A3DE911D7043CF00B9D383 /* CreateDirectConversationViewController.swift */,
+				94B3A34E1D73EC3E0092A29F /* CreateGroupConversationViewController.swift */,
 				94A3DE8F1D7024DA00B9D383 /* CurrentUserUnreadCountViewController.swift */,
 				94B3A34C1D73D3790092A29F /* DetailViewController.swift */,
 				94A3DE8B1D701DF300B9D383 /* ServerConfigurationViewController.swift */,
@@ -232,7 +235,8 @@
 				948E0A351D6EE7B00087F860 /* AppDelegate.swift in Sources */,
 				94A3DE8C1D701DF300B9D383 /* ServerConfigurationViewController.swift in Sources */,
 				94A3DE941D7047D400B9D383 /* UsersViewController.swift in Sources */,
-				94A3DE921D7043CF00B9D383 /* CreateDirectConversation.swift in Sources */,
+				94B3A34F1D73EC3E0092A29F /* CreateGroupConversationViewController.swift in Sources */,
+				94A3DE921D7043CF00B9D383 /* CreateDirectConversationViewController.swift in Sources */,
 				94A3DE8E1D701E6E00B9D383 /* UserAuthenticationViewController.swift in Sources */,
 				94A3DE901D7024DA00B9D383 /* CurrentUserUnreadCountViewController.swift in Sources */,
 				94B3A34D1D73D3790092A29F /* DetailViewController.swift in Sources */,

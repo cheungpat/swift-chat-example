@@ -9,11 +9,10 @@
 import UIKit
 import SKYKit
 
-class CreateDirectConversation: UIViewController {
+class CreateDirectConversationViewController: UIViewController {
     
     @IBOutlet var userIdTextField: UITextField!
     @IBOutlet var createdConversationTextView: UITextView!
-    @IBOutlet var createBtn: UIButton!
     
     // MARK: - Lifecycle
     
@@ -22,6 +21,8 @@ class CreateDirectConversation: UIViewController {
         
         
     }
+    
+    // MARK: - Actions
     
     @IBAction func createConversation(sneder: AnyObject!) {
         if var id = userIdTextField.text where !id.isEmpty {
