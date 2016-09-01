@@ -9,12 +9,14 @@
 import UIKit
 import SKYKit
 
-class ConversationRoomViewController: UITableViewController {
+class ConversationRoomViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var conversation: SKYConversation!
     
     var messages = [SKYMessage]()
 
+    @IBOutlet var tableView: UITableView!
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -59,15 +61,15 @@ class ConversationRoomViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
 
         cell.textLabel?.text = messages[indexPath.row].body
@@ -76,7 +78,7 @@ class ConversationRoomViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier("message_detail", sender: messages[indexPath.row].dictionary)
     }
     
