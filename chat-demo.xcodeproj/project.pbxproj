@@ -10,6 +10,7 @@
 		94746E751D77FF5600E6C378 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94746E741D77FF5600E6C378 /* ConversationsViewController.swift */; };
 		94746E771D7804E800E6C378 /* ConversationRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94746E761D7804E800E6C378 /* ConversationRoomViewController.swift */; };
 		94746E791D7819D300E6C378 /* DictionaryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94746E781D7819D300E6C378 /* DictionaryDetailViewController.swift */; };
+		94746E7B1D78261000E6C378 /* ConversationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94746E7A1D78261000E6C378 /* ConversationDetailViewController.swift */; };
 		948E0A351D6EE7B00087F860 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E0A341D6EE7B00087F860 /* AppDelegate.swift */; };
 		948E0A371D6EE7B00087F860 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948E0A361D6EE7B00087F860 /* MainViewController.swift */; };
 		948E0A3A1D6EE7B00087F860 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 948E0A381D6EE7B00087F860 /* Main.storyboard */; };
@@ -29,6 +30,7 @@
 		94746E741D77FF5600E6C378 /* ConversationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
 		94746E761D7804E800E6C378 /* ConversationRoomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationRoomViewController.swift; sourceTree = "<group>"; };
 		94746E781D7819D300E6C378 /* DictionaryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryDetailViewController.swift; sourceTree = "<group>"; };
+		94746E7A1D78261000E6C378 /* ConversationDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationDetailViewController.swift; sourceTree = "<group>"; };
 		948E0A311D6EE7B00087F860 /* chat-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "chat-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		948E0A341D6EE7B00087F860 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		948E0A361D6EE7B00087F860 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 				948E0A341D6EE7B00087F860 /* AppDelegate.swift */,
 				948E0A361D6EE7B00087F860 /* MainViewController.swift */,
 				94746E741D77FF5600E6C378 /* ConversationsViewController.swift */,
+				94746E7A1D78261000E6C378 /* ConversationDetailViewController.swift */,
 				94746E761D7804E800E6C378 /* ConversationRoomViewController.swift */,
 				94A3DE911D7043CF00B9D383 /* CreateDirectConversationViewController.swift */,
 				94B3A34E1D73EC3E0092A29F /* CreateGroupConversationViewController.swift */,
@@ -252,6 +255,7 @@
 				94A3DE901D7024DA00B9D383 /* CurrentUserUnreadCountViewController.swift in Sources */,
 				94B3A34D1D73D3790092A29F /* DetailViewController.swift in Sources */,
 				94746E791D7819D300E6C378 /* DictionaryDetailViewController.swift in Sources */,
+				94746E7B1D78261000E6C378 /* ConversationDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

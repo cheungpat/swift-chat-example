@@ -51,13 +51,10 @@ class ConversationRoomViewController: UITableViewController {
         }
     }
     
-    // MARK: - Navigation
+    // MARK: - Action
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "message_detail" {
-            let controller = segue.destinationViewController as! DictionaryDetailViewController
-            controller.dictionary = sender as! NSDictionary
-        }
+    @IBAction func showDetail(sender: AnyObject) {
+        performSegueWithIdentifier("conversation_detail", sender: conversation)
     }
 
     // MARK: - Table view data source
@@ -82,5 +79,16 @@ class ConversationRoomViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier("message_detail", sender: messages[indexPath.row].dictionary)
     }
-
+    
+    // MARK: - Navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "message_detail" {
+            let controller = segue.destinationViewController as! DictionaryDetailViewController
+            controller.dictionary = sender as! NSDictionary
+        } else if segue.identifier == "conversation_detail" {
+            let controller = segue.destinationViewController as! ConversationDetailViewController
+            controller.conversation = sender as! SKYConversation
+        }
+    }
 }
