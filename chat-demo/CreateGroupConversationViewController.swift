@@ -9,12 +9,17 @@
 import UIKit
 import SKYKit
 
-class CreateGroupConversationViewController: UIViewController {
+class CreateGroupConversationViewController:
+    UIViewController,
+    UITableViewDelegate,
+    UITableViewDataSource,
+    UITextFieldDelegate {
 
+    @IBOutlet var titleTextField: UITextField!
     @IBOutlet var userIdTableView: UITableView!
     @IBOutlet var createdConversationTextView: UITextView!
     
-    
+    var userIds = [String]()
     
     // MARK: - Lifecycle
     
@@ -38,13 +43,15 @@ class CreateGroupConversationViewController: UIViewController {
         }
         alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))
         alert.addAction(UIAlertAction(title: "Add", style: .Default, handler: { (action) in
-            let userId = alert.textFields?.first?.text
-            
-            if (userId ?? "").isEmpty {
-                return
+            if var id = alert.textFields?.first?.text where !id.isEmpty {
+                if id.hasPrefix("user/") {
+                    id = id.substringFromIndex("user/".endIndex)
+                }
+                
+                self.userIds.append(id)
+                let indexPath = NSIndexPath(forRow: self.userIds.count-1, inSection: 0)
+                self.userIdTableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
             }
-            
-            //do something
         }))
         alert.preferredAction = alert.actions.last
         self.presentViewController(alert, animated: true, completion: nil)
@@ -52,7 +59,47 @@ class CreateGroupConversationViewController: UIViewController {
     
     @IBAction func createConversation(sneder: AnyObject!) {
         
-        SKYContainer.defaultContainer().createConversationWithParticipantIds(<#T##participantIds: [AnyObject]!##[AnyObject]!#>, withAdminIds: <#T##[AnyObject]!#>, withTitle: <#T##String!#>, completionHandler: <#T##SKYContainerConversationOperationActionCompletion!##SKYContainerConversationOperationActionCompletion!##(SKYConversation!, NSError!) -> Void#>)
+        var userIds = self.userIds
+        
+        if !userIds.contains(SKYContainer.defaultContainer().currentUserRecordID) {
+            userIds.append(SKYContainer.defaultContainer().currentUserRecordID)
+        }
+        
+        // let ids be unique
+        userIds = Array(Set(userIds))
+        
+        SKYContainer.defaultContainer().createConversationWithParticipantIds(userIds, withAdminIds: userIds, withTitle: titleTextField.text) { (conversation, error) in
+            if error != nil {
+                let alert = UIAlertController(title: "Unable to create group conversation", message: error.localizedDescription, preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+                return
+            }
+            
+            self.createdConversationTextView.text = conversation.recordID.canonicalString
+        }
+    }
+    
+    // MARK: - Table view data source
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1;
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return userIds.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        cell.textLabel?.text = userIds[indexPath.row]
+        return cell
     }
 
+    // MARK: - Text view data source
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }
