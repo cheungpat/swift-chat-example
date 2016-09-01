@@ -26,10 +26,21 @@ class ConversationsViewController: UITableViewController {
                 return
             }
             
-            self.userCons = userCons
+            // newest should be on top
+            self.userCons = userCons.reverse()
             self.tableView.reloadData()
         }
     }
+    
+    // MARK: - Navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "conversation_room" {
+            let controller = segue.destinationViewController as! ConversationRoomViewController
+            controller.conversation = sender as! SKYConversation
+        }
+    }
+
 
     // MARK: - Table view data source
 
@@ -49,6 +60,10 @@ class ConversationsViewController: UITableViewController {
         cell.detailTextLabel?.text = "\(conversation.recordID.canonicalString)"
 
         return cell
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        performSegueWithIdentifier("conversation_room", sender: userCons[indexPath.row].conversation)
     }
 
 }
