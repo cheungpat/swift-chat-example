@@ -9,13 +9,19 @@
 import UIKit
 import SKYKit
 
-class ConversationRoomViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ConversationRoomViewController:
+    UIViewController,
+    UITableViewDelegate,
+    UITableViewDataSource,
+    UITextFieldDelegate {
+    
+    @IBOutlet var tableView: UITableView!
+    @IBOutlet var bottomEdgeConstraint: NSLayoutConstraint!
+    @IBOutlet var messaegBodyTextField: UITextField!
+    @IBOutlet var messageMetadataTextField: UITextField!
     
     var conversation: SKYConversation!
-    
-    var messages = [SKYMessage]()
-
-    @IBOutlet var tableView: UITableView!
+    var messages = [SKYMessage]()    
     
     // MARK: - Lifecycle
     
@@ -24,6 +30,29 @@ class ConversationRoomViewController: UIViewController, UITableViewDelegate, UIT
         
         self.navigationItem.title = conversation.title
         
+        // listening keyboard event
+        NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardWillChangeFrameNotification, object: nil, queue: nil) { (note) in
+            let keyboardFrame: CGRect = (note.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+            let animationDuration: NSTimeInterval = (note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+            let animationCurve: UIViewAnimationCurve = UIViewAnimationCurve(rawValue: (note.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).integerValue)!
+            UIView.animateWithDuration(animationDuration, animations: {
+                UIView.setAnimationCurve(animationCurve)
+                self.bottomEdgeConstraint.constant = keyboardFrame.height
+                self.view.layoutIfNeeded()
+            })
+        }
+        
+        NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardWillHideNotification, object: nil, queue: nil) { (note) in
+            let animationDuration: NSTimeInterval = (note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+            
+            UIView.animateWithDuration(animationDuration, animations: {
+                self.bottomEdgeConstraint.constant = 0
+                self.view.layoutIfNeeded()
+            })
+            
+        }
+        
+        // subscribe chat messages
         // FIXME: SDK should help deserialize SKYMessage?
         SKYContainer.defaultContainer().subscribeHandler({ (dictionary) in
             if let recordType = dictionary["record_type"] as? String where recordType == "message",
@@ -37,6 +66,7 @@ class ConversationRoomViewController: UIViewController, UITableViewDelegate, UIT
             }
         })
         
+        // get conversation messages
         SKYContainer.defaultContainer().getMessagesWithConversationId(conversation.recordID.recordName, withLimit: "100", withBeforeTime: NSDate()) { (messages, error) in
             if error != nil {
                 let alert = UIAlertController(title: "Unable to fetch conversations", message: error.localizedDescription, preferredStyle: .Alert)
@@ -59,6 +89,28 @@ class ConversationRoomViewController: UIViewController, UITableViewDelegate, UIT
         performSegueWithIdentifier("conversation_detail", sender: conversation)
     }
 
+    @IBAction func sendMessage(sender: AnyObject) {
+        // chat SDK createMessage method still not fully implement
+        SKYContainer.defaultContainer().createMessageWithConversationId(
+            self.conversation.recordID.recordName,
+            withBody: messaegBodyTextField.text,
+            withURL: nil,
+            withType: SKYChatMetaDataType.Text,
+            withDuration:0) { (message, error) in
+                
+                if error != nil {
+                    let alert = UIAlertController(title: "Unable to send message", message: error.localizedDescription, preferredStyle: .Alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                    return
+                }
+                
+                if message != nil {
+                    print("send message successful")
+                }
+        }
+    }
+    
     // MARK: - Table view data source
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -80,6 +132,13 @@ class ConversationRoomViewController: UIViewController, UITableViewDelegate, UIT
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier("message_detail", sender: messages[indexPath.row].dictionary)
+    }
+    
+    // MARK: - Text field delegate
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
     // MARK: - Navigation
