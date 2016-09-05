@@ -20,15 +20,17 @@ class ConversationRoomViewController:
     @IBOutlet var messaegBodyTextField: UITextField!
     @IBOutlet var messageMetadataTextField: UITextField!
     
-    var conversation: SKYConversation!
-    var messages = [SKYMessage]()    
+    var userCon: SKYUserConversation!
+    var messages = [SKYMessage]()
+    var lastReadMessage:SKYMessage?
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = conversation.title
+        self.navigationItem.title = userCon.conversation.title
+        self.lastReadMessage = userCon.lastReadMessage
         
         // listening keyboard event
         NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardWillChangeFrameNotification, object: nil, queue: nil) { (note) in
@@ -58,7 +60,7 @@ class ConversationRoomViewController:
             if let recordType = dictionary["record_type"] as? String where recordType == "message",
                 let recordDic = dictionary["record"] as? [NSObject : AnyObject],
                 let record = SKYRecordDeserializer().recordWithDictionary(recordDic),
-                let message = SKYMessage(record: record) where message.conversationID == self.conversation.recordID.recordName {
+                let message = SKYMessage(record: record) where message.conversationID == self.userCon.conversation.recordID.recordName {
                 
                 self.messages.insert(message, atIndex: 0)
                 let indexPath = NSIndexPath(forRow: 0, inSection: 0)
@@ -67,7 +69,7 @@ class ConversationRoomViewController:
         })
         
         // get conversation messages
-        SKYContainer.defaultContainer().getMessagesWithConversationId(conversation.recordID.recordName, withLimit: "100", withBeforeTime: NSDate()) { (messages, error) in
+        SKYContainer.defaultContainer().getMessagesWithConversationId(userCon.conversation.recordID.recordName, withLimit: "100", withBeforeTime: NSDate()) { (messages, error) in
             if error != nil {
                 let alert = UIAlertController(title: "Unable to fetch conversations", message: error.localizedDescription, preferredStyle: .Alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
@@ -86,13 +88,13 @@ class ConversationRoomViewController:
     // MARK: - Action
     
     @IBAction func showDetail(sender: AnyObject) {
-        performSegueWithIdentifier("conversation_detail", sender: conversation)
+        performSegueWithIdentifier("conversation_detail", sender: userCon)
     }
 
     @IBAction func sendMessage(sender: AnyObject) {
         // chat SDK createMessage method still not fully implement
         SKYContainer.defaultContainer().createMessageWithConversationId(
-            self.conversation.recordID.recordName,
+            self.userCon.conversation.recordID.recordName,
             withBody: messaegBodyTextField.text,
             withURL: nil,
             withType: SKYChatMetaDataType.Text,
@@ -123,15 +125,43 @@ class ConversationRoomViewController:
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
-
-        cell.textLabel?.text = messages[indexPath.row].body
-        cell.detailTextLabel?.text = messages[indexPath.row].recordID.canonicalString
+        let message = messages[indexPath.row]
+        
+        var lastRead = ""
+        if lastReadMessage != nil && lastReadMessage?.recordID.recordName == message.recordID.recordName {
+            lastRead = "  === last read message ==="
+        }
+        cell.textLabel?.text = message.body + lastRead
+        cell.detailTextLabel?.text = message.recordID.canonicalString
 
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         performSegueWithIdentifier("message_detail", sender: messages[indexPath.row].dictionary)
+    }
+    
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let unreadAction = UITableViewRowAction(style: UITableViewRowActionStyle.Normal , title: "mark as unread") { (action, indexPath) in
+            
+            let message = self.messages[indexPath.row]
+            SKYContainer.defaultContainer().markAsLastMessageReadWithConversationId(
+                self.userCon.conversation.recordID.recordName,
+                withMessageId: message.recordID.recordName,
+                completionHandler: { (userCon, error) in
+                    
+                    if error != nil {
+                        let alert = UIAlertController(title: "Unable to mark last read message", message: error.localizedDescription, preferredStyle: .Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                        self.presentViewController(alert, animated: true, completion: nil)
+                        return
+                    }
+                    
+                    self.refreshConversation()
+            })
+        }
+        
+        return [unreadAction]
     }
     
     // MARK: - Text field delegate
@@ -149,7 +179,16 @@ class ConversationRoomViewController:
             controller.dictionary = sender as! NSDictionary
         } else if segue.identifier == "conversation_detail" {
             let controller = segue.destinationViewController as! ConversationDetailViewController
-            controller.conversation = sender as! SKYConversation
+            controller.userCon = sender as! SKYUserConversation
         }
+    }
+    
+    func refreshConversation() {
+        SKYContainer.defaultContainer().getConversationWithConversationId(self.userCon.conversation.recordID.recordName,
+                                                                          completionHandler: { (conversation, error) in
+                                                                            self.userCon = conversation
+                                                                            self.lastReadMessage = conversation.lastReadMessage
+                                                                            self.tableView.reloadData()
+        })
     }
 }

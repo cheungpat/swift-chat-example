@@ -99,7 +99,6 @@
 				94746E761D7804E800E6C378 /* ConversationRoomViewController.swift */,
 				94A3DE911D7043CF00B9D383 /* CreateDirectConversationViewController.swift */,
 				94B3A34E1D73EC3E0092A29F /* CreateGroupConversationViewController.swift */,
-				94A3DE8F1D7024DA00B9D383 /* CurrentUserUnreadCountViewController.swift */,
 				94B3A34C1D73D3790092A29F /* DetailViewController.swift */,
 				94746E781D7819D300E6C378 /* DictionaryDetailViewController.swift */,
 				94A3DE8B1D701DF300B9D383 /* ServerConfigurationViewController.swift */,
@@ -107,6 +106,7 @@
 				94A3DE931D7047D400B9D383 /* UsersViewController.swift */,
 				948E0A381D6EE7B00087F860 /* Main.storyboard */,
 				948E0A3B1D6EE7B00087F860 /* Assets.xcassets */,
+				94A3DE8F1D7024DA00B9D383 /* CurrentUserUnreadCountViewController.swift */,
 				948E0A3D1D6EE7B00087F860 /* LaunchScreen.storyboard */,
 				948E0A401D6EE7B00087F860 /* Info.plist */,
 			);
@@ -128,12 +128,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 948E0A431D6EE7B00087F860 /* Build configuration list for PBXNativeTarget "chat-demo" */;
 			buildPhases = (
-				7415285138E07902F9FA8219 /* Check Pods Manifest.lock */,
+				7415285138E07902F9FA8219 /* [CP] Check Pods Manifest.lock */,
 				948E0A2D1D6EE7B00087F860 /* Sources */,
 				948E0A2E1D6EE7B00087F860 /* Frameworks */,
 				948E0A2F1D6EE7B00087F860 /* Resources */,
-				2189D05A129D1F5DA4F5E2CD /* Embed Pods Frameworks */,
-				199F1D99F2D1379A61AC8461 /* Copy Pods Resources */,
+				2189D05A129D1F5DA4F5E2CD /* [CP] Embed Pods Frameworks */,
+				199F1D99F2D1379A61AC8461 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -191,14 +191,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		199F1D99F2D1379A61AC8461 /* Copy Pods Resources */ = {
+		199F1D99F2D1379A61AC8461 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -206,14 +206,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-chat-demo/Pods-chat-demo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2189D05A129D1F5DA4F5E2CD /* Embed Pods Frameworks */ = {
+		2189D05A129D1F5DA4F5E2CD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -221,14 +221,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-chat-demo/Pods-chat-demo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7415285138E07902F9FA8219 /* Check Pods Manifest.lock */ = {
+		7415285138E07902F9FA8219 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;

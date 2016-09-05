@@ -13,11 +13,11 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
     
     @IBOutlet var participantTextField: UITextField!
     
-    // FIXME: SDK should be able get conversation unread count
-    let participantIdsSection = 0
-    let adminIdsSection = 1
+    let unreadMessageCount = 0
+    let participantIdsSection = 1
+    let adminIdsSection = 2
     
-    var conversation: SKYConversation!
+    var userCon: SKYUserConversation!
     
     // MARK: - Lifecycle
 
@@ -73,15 +73,17 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
+        case unreadMessageCount:
+            return 1
         case participantIdsSection:
-            return conversation.participantIds.count
+            return userCon.conversation.participantIds.count
         case adminIdsSection:
-            return conversation.adminIds.count
+            return userCon.conversation.adminIds.count
         default:
             return 0
         }
@@ -89,10 +91,12 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
 
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
+        case unreadMessageCount:
+            return "Unread Count"
         case participantIdsSection:
             return "ParticipantIds"
         case adminIdsSection:
-            return "adminIds"
+            return "AdminIds"
         default:
             return nil
         }
@@ -100,13 +104,17 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         switch indexPath.section {
+        case unreadMessageCount:
+            let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+            cell.textLabel?.text = "\(userCon.unreadCount)"
+            return cell
         case participantIdsSection:
             let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
-            cell.textLabel?.text = conversation.participantIds[indexPath.row]
+            cell.textLabel?.text = userCon.conversation.participantIds[indexPath.row]
             return cell
         case adminIdsSection:
             let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
-            cell.textLabel?.text = conversation.adminIds[indexPath.row]
+            cell.textLabel?.text = userCon.conversation.adminIds[indexPath.row]
             return cell
         default:
             return UITableViewCell()
@@ -116,9 +124,9 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         switch indexPath.section {
         case participantIdsSection:
-            performSegueWithIdentifier("showDetail", sender: conversation.participantIds[indexPath.row])
+            performSegueWithIdentifier("showDetail", sender: userCon.conversation.participantIds[indexPath.row])
         case adminIdsSection:
-            performSegueWithIdentifier("showDetail", sender: conversation.adminIds[indexPath.row])
+            performSegueWithIdentifier("showDetail", sender: userCon.conversation.adminIds[indexPath.row])
         default: break
         }
     }

@@ -37,7 +37,7 @@ class ConversationsViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "conversation_room" {
             let controller = segue.destinationViewController as! ConversationRoomViewController
-            controller.conversation = sender as! SKYConversation
+            controller.userCon = sender as! SKYUserConversation
         }
     }
 
@@ -63,7 +63,7 @@ class ConversationsViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier("conversation_room", sender: userCons[indexPath.row].conversation)
+        performSegueWithIdentifier("conversation_room", sender: userCons[indexPath.row])
     }
 
 }
