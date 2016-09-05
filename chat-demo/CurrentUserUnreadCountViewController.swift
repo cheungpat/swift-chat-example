@@ -23,19 +23,19 @@ class CurrentUserUnreadCountViewController: UITableViewController {
         super.viewDidLoad()
         
         // SDK should implement get total unread
-//        SKYContainer.defaultContainer().getUnreadMessageCount { (response, error) in
-//            if (error != nil) {
-//                let alert = UIAlertController(title: "Unable to get unread count", message: error.localizedDescription, preferredStyle: .Alert)
-//                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-//                self.presentViewController(alert, animated: true, completion: nil)
-//                return
-//            }
-//            
-//            self.unreadConversationCount = response["conversation"] as? Int
-//            self.unreadMessageCount = response["message"] as? Int
-//            
-//            self.tableView.reloadData()
-//        }
+        SKYContainer.defaultContainer().getTotalUnreadCount { (response, error) in
+            if (error != nil) {
+                let alert = UIAlertController(title: "Unable to get unread count", message: error.localizedDescription, preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+                return
+            }
+            
+            self.unreadConversationCount = response["conversation"] as? Int
+            self.unreadMessageCount = response["message"] as? Int
+            
+            self.tableView.reloadData()
+        }
     }
     
     // MARK: - Table view data source
