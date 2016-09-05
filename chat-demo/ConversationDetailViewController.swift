@@ -24,6 +24,7 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        refreshConversation()
     }
     
     // MARK: - Action
@@ -68,6 +69,14 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
 //                    self.tableView.reloadData()
 //            })
 //        }
+    }
+    
+    func refreshConversation() {
+        SKYContainer.defaultContainer().getConversationWithConversationId(self.userCon.conversation.recordID.recordName,
+                                                                          completionHandler: { (conversation, error) in
+                                                                            self.userCon = conversation
+                                                                            self.tableView.reloadData()
+        })
     }
     
     // MARK: - Table view data source
