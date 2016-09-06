@@ -18,7 +18,7 @@ class ConversationsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        SKYContainer.defaultContainer().getConversationsCompletionHandler { (userCons, error) in
+        SKYContainer.defaultContainer().getUserConversationsCompletionHandler { (userCons, error) in
             if error != nil {
                 let alert = UIAlertController(title: "Unable to fetch conversations", message: error.localizedDescription, preferredStyle: .Alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))

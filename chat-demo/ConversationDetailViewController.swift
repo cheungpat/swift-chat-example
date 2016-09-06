@@ -29,50 +29,45 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
     
     // MARK: - Action
     @IBAction func addParticipant(sender: AnyObject) {
-        // FIXME: call this method will crash, SDK should fix getConversationWithConversationId
-//        if let id = participantTextField.text where !id.isEmpty {
-//            SKYContainer.defaultContainer().addParticipantsWithConversationId(
-//                conversation.recordID.recordName,
-//                withParticipantIds: [id],
-//                completionHandler: { (conversation, error) in
-//                    
-//                    if error != nil {
-//                        let alert = UIAlertController(title: "Unable to add user to participant.", message: error.localizedDescription, preferredStyle: .Alert)
-//                        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-//                        self.presentViewController(alert, animated: true, completion: nil)
-//                        return
-//                    }
-//                    
-//                    self.conversation = conversation
-//                    self.tableView.reloadData()
-//            })
-//        }
+        if let id = participantTextField.text where !id.isEmpty {
+            SKYContainer.defaultContainer().addParticipantsWithConversationId(
+                userCon.conversation.recordID.recordName,
+                withParticipantIds: [id],
+                completionHandler: { (conversation, error) in
+                    
+                    if error != nil {
+                        let alert = UIAlertController(title: "Unable to add user to participant.", message: error.localizedDescription, preferredStyle: .Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                        self.presentViewController(alert, animated: true, completion: nil)
+                        return
+                    }
+                    
+                    self.refreshConversation()
+            })
+        }
     }
 
     @IBAction func removeParticipant(sender: AnyObject) {
-        // FIXME: call this method will crash, SDK should fix getConversationWithConversationId
-//        if let id = participantTextField.text where !id.isEmpty {
-//            print("\(conversation.recordID.recordName)")
-//            SKYContainer.defaultContainer().removeParticipantsWithConversationId(
-//                conversation.recordID.recordName,
-//                withParticipantIds: [id],
-//                completionHandler: { (conversation, error) in
-//                    
-//                    if error != nil {
-//                        let alert = UIAlertController(title: "Unable to remove user from participant.", message: error.localizedDescription, preferredStyle: .Alert)
-//                        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-//                        self.presentViewController(alert, animated: true, completion: nil)
-//                        return
-//                    }
-//                    
-//                    self.conversation = conversation
-//                    self.tableView.reloadData()
-//            })
-//        }
+        if let id = participantTextField.text where !id.isEmpty {
+            SKYContainer.defaultContainer().removeParticipantsWithConversationId(
+                userCon.conversation.recordID.recordName,
+                withParticipantIds: [id],
+                completionHandler: { (conversation, error) in
+                    
+                    if error != nil {
+                        let alert = UIAlertController(title: "Unable to remove user from participant.", message: error.localizedDescription, preferredStyle: .Alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                        self.presentViewController(alert, animated: true, completion: nil)
+                        return
+                    }
+                    
+                    self.refreshConversation()
+            })
+        }
     }
     
     func refreshConversation() {
-        SKYContainer.defaultContainer().getConversationWithConversationId(self.userCon.conversation.recordID.recordName,
+        SKYContainer.defaultContainer().getUserConversationWithConversationId(self.userCon.conversation.recordID.recordName,
                                                                           completionHandler: { (conversation, error) in
                                                                             self.userCon = conversation
                                                                             self.tableView.reloadData()

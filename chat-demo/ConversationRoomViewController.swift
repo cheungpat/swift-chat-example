@@ -203,7 +203,7 @@ class ConversationRoomViewController:
     }
     
     func refreshConversation() {
-        SKYContainer.defaultContainer().getConversationWithConversationId(self.userCon.conversation.recordID.recordName,
+        SKYContainer.defaultContainer().getUserConversationWithConversationId(self.userCon.conversation.recordID.recordName,
                                                                           completionHandler: { (conversation, error) in
                                                                             self.userCon = conversation
                                                                             self.lastReadMessage = conversation.lastReadMessage
