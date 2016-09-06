@@ -13,16 +13,20 @@ class ConversationRoomViewController:
     UIViewController,
     UITableViewDelegate,
     UITableViewDataSource,
-    UITextFieldDelegate {
+    UITextFieldDelegate,
+    UIImagePickerControllerDelegate,
+    UINavigationControllerDelegate {
     
     @IBOutlet var tableView: UITableView!
     @IBOutlet var bottomEdgeConstraint: NSLayoutConstraint!
     @IBOutlet var messaegBodyTextField: UITextField!
     @IBOutlet var messageMetadataTextField: UITextField!
+    @IBOutlet var chosenAsseTexttLabel: UILabel!
     
     var userCon: SKYUserConversation!
     var messages = [SKYMessage]()
     var lastReadMessage:SKYMessage?
+    var chosenAsset:SKYAsset?
     
     // MARK: - Lifecycle
     
@@ -92,14 +96,22 @@ class ConversationRoomViewController:
     }
 
     @IBAction func sendMessage(sender: AnyObject) {
-        // chat SDK createMessage method still not fully implement
+        // convert metadata to dictionary
+        var metadateDic:[NSObject:AnyObject]?
+        if let metadata = messageMetadataTextField.text where !metadata.isEmpty {
+            let jsonData = messageMetadataTextField.text!.dataUsingEncoding(NSUTF8StringEncoding)
+            do {
+                metadateDic = try NSJSONSerialization.JSONObjectWithData(jsonData!, options: []) as? [NSObject : AnyObject]
+            } catch let error {
+                print("json error: \(error)")
+            }
+        }
+        
         SKYContainer.defaultContainer().createMessageWithConversationId(
             self.userCon.conversation.recordID.recordName,
             withBody: messaegBodyTextField.text,
-            withURL: nil,
-            withType: SKYChatMetaDataType.Text,
-            withDuration:0) { (message, error) in
-                
+            withMetadata: metadateDic,
+            withAsset: chosenAsset) { (message, error) in
                 if error != nil {
                     let alert = UIAlertController(title: "Unable to send message", message: error.localizedDescription, preferredStyle: .Alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
@@ -111,6 +123,13 @@ class ConversationRoomViewController:
                     print("send message successful")
                 }
         }
+    }
+    
+    @IBAction func chooseImageAsset(sender: AnyObject) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .SavedPhotosAlbum
+        imagePicker.delegate = self
+        self.navigationController?.presentViewController(imagePicker, animated: true, completion: nil)
     }
     
     // MARK: - Table view data source
@@ -190,5 +209,27 @@ class ConversationRoomViewController:
                                                                             self.lastReadMessage = conversation.lastReadMessage
                                                                             self.tableView.reloadData()
         })
+    }
+    
+    // MARK: - UIImagePickerControllerDelegate
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+        guard let image = info[UIImagePickerControllerOriginalImage] as? UIImage else {
+            return
+        }
+        
+        let asset = SKYAsset(data: UIImagePNGRepresentation(image))
+        SKYContainer.defaultContainer().uploadAsset(asset) { (asset, error) in
+            if error != nil {
+                let alert = UIAlertController(title: "Unable to upload", message: error!.localizedDescription, preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+                return
+            }
+            
+            self.chosenAsset = asset
+            self.chosenAsseTexttLabel.text = asset.description
+        }
     }
 }
