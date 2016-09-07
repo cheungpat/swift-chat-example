@@ -219,6 +219,7 @@ class ConversationRoomViewController:
         }
         
         let asset = SKYAsset(data: UIImagePNGRepresentation(image))
+        asset.mimeType = "image/png"
         SKYContainer.defaultContainer().uploadAsset(asset) { (asset, error) in
             if error != nil {
                 let alert = UIAlertController(title: "Unable to upload", message: error!.localizedDescription, preferredStyle: .Alert)
