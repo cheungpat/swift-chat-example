@@ -82,8 +82,7 @@ class ConversationRoomViewController:
             }
             
             if messages != nil {
-                // newest should be on top
-                self.messages = messages.reverse()
+                self.messages = messages
                 self.tableView.reloadData()
             }
         }
