@@ -5,26 +5,27 @@ Chat plugin example in Swift
 This example app demonstrate basic usage of iOS Chat SDK, it implemented :
 
 - Skygear basic authentication
-- Unread conversations/messages count
 - Create direct(one to one)/group conversation
+- Add/remove conversation participants
 - A simple chatroom
 - Send Message with extra metadata field and image asset
-- Add/remove conversation participants
+- Unread conversations/messages count
 
 
 ## How to run this demo app
 
-- Register your app in https://skygear.io/
-- To enable chat feature, you need to push Chat Plugin into your skygear
-  server cloud code repository.
-- Skygear Chat Plugin : https://github.com/SkygearIO/chat, you may also
-  reference this for plugin tutorial
-  https://docs.skygear.io/plugin/guide/first-plugin
-- you can found your cloud code repo in skygear protal, INFO tab, it will
-  usually like `ssh://git@git.skygeario.com/<yourappname>.git`, please don't
-  forget add your ssh key.
-- After you clone this project, run `pod install` under the directory.
-- to run `pod install`, you will need install https://cocoapods.org/
-- When you first launch app, it will ask you to configure `SkygearEndpoint`
-  and `SkygearApiKey`, they are also in skygear protal.
-- Done!
+1. Register your app in https://skygear.io/
+1. You can found your cloud code repo in skygear
+   [protal](http://portal.skygear.io)), `INFO` tab, the format is:
+   `ssh://git@git.skygeario.com/<yourappname>.git`
+1. Add your ssh key to at [My Account](https://portal.skygear.io/user/settings)
+1. To enable chat feature, you need to push Chat Plugin into your skygear
+   server cloud code repository. Skygear Chat Plugin are located at
+   https://github.com/SkygearIO/chat, you may also reference this for plugin
+   tutorial https://docs.skygear.io/plugin/guide/first1.plugin
+1. After you clone this project, run `pod install` under the directory.
+1. to run `pod install`, you will need install https://cocoapods.org/
+1. When you first launch app, it will ask you to configure `SkygearEndpoint`
+   and `SkygearApiKey`, they are also in skygear protal `INFO` section:
+   https://portal-staging.skygear.io/app/info.
+1. Done!
