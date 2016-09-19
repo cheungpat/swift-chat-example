@@ -1,0 +1,39 @@
+PODS:
+  - Bolts (1.8.4):
+    - Bolts/AppLinks (= 1.8.4)
+    - Bolts/Tasks (= 1.8.4)
+  - Bolts/AppLinks (1.8.4):
+    - Bolts/Tasks
+  - Bolts/Tasks (1.8.4)
+  - FBSDKCoreKit (4.15.1):
+    - Bolts (~> 1.7)
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+  - SKYKit (0.17.0):
+    - SKYKit/Core (= 0.17.0)
+  - SKYKit/Chat (0.17.0):
+    - SKYKit/Core
+  - SKYKit/Core (0.17.0):
+    - FMDB (~> 2.5)
+    - SocketRocket (~> 0.4)
+  - SKYKit/Facebook (0.17.0):
+    - FBSDKCoreKit (~> 4.0)
+    - SKYKit/Core
+  - SocketRocket (0.5.1)
+
+DEPENDENCIES:
+  - SKYKit (~> 0.17.0)
+  - SKYKit/Chat (~> 0.17.0)
+  - SKYKit/Facebook (~> 0.17.0)
+
+SPEC CHECKSUMS:
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  FBSDKCoreKit: fc7fa53d16b095ee3fd53f0cd59f1df8bcbb634d
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  SKYKit: 56fe4b349881499a721e95d26fbe94922f42be26
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+
+PODFILE CHECKSUM: fb867adc23d3a20fdcffed910bc34d07cf1e5c04
+
+COCOAPODS: 1.1.1
