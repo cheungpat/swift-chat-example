@@ -37,21 +37,21 @@ class ConversationRoomViewController:
         self.lastReadMessage = userCon.lastReadMessage
         
         // listening keyboard event
-        NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardWillChangeFrameNotification, object: nil, queue: nil) { (note) in
-            let keyboardFrame: CGRect = (note.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-            let animationDuration: NSTimeInterval = (note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
-            let animationCurve: UIViewAnimationCurve = UIViewAnimationCurve(rawValue: (note.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).integerValue)!
-            UIView.animateWithDuration(animationDuration, animations: {
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil, queue: nil) { (note) in
+            let keyboardFrame: CGRect = (note.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+            let animationDuration: TimeInterval = (note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+            let animationCurve: UIViewAnimationCurve = UIViewAnimationCurve(rawValue: (note.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue)!
+            UIView.animate(withDuration: animationDuration, animations: {
                 UIView.setAnimationCurve(animationCurve)
                 self.bottomEdgeConstraint.constant = keyboardFrame.height
                 self.view.layoutIfNeeded()
             })
         }
         
-        NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardWillHideNotification, object: nil, queue: nil) { (note) in
-            let animationDuration: NSTimeInterval = (note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardWillHide, object: nil, queue: nil) { (note) in
+            let animationDuration: TimeInterval = (note.userInfo![UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
             
-            UIView.animateWithDuration(animationDuration, animations: {
+            UIView.animate(withDuration: animationDuration, animations: {
                 self.bottomEdgeConstraint.constant = 0
                 self.view.layoutIfNeeded()
             })
@@ -60,29 +60,29 @@ class ConversationRoomViewController:
         
         // subscribe chat messages
         // FIXME: SDK should help deserialize SKYMessage?
-        SKYContainer.defaultContainer().subscribeHandler({ (dictionary) in
-            if let recordType = dictionary["record_type"] as? String where recordType == "message",
-                let recordDic = dictionary["record"] as? [NSObject : AnyObject],
-                let record = SKYRecordDeserializer().recordWithDictionary(recordDic),
-                let message = SKYMessage(record: record) where message.conversationID == self.userCon.conversation.recordID.recordName {
+        SKYContainer.default().subscribeHandler({ (dictionary) in
+            if let dict = dictionary,
+                let recordType = dict["record_type"] as? String, recordType == "message",
+                let recordDic = dict["record"] as? [AnyHashable: Any],
+                let record = SKYRecordDeserializer().record(with: recordDic),
+                let message = SKYMessage(record: record), message.conversationID == self.userCon.conversation.recordID.recordName {
                 
-                self.messages.insert(message, atIndex: 0)
-                let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-                self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+                self.messages.insert(message, at: 0)
+                self.tableView.insertRows(at: [IndexPath.init(row: 0, section: 0)], with: .automatic)
             }
         })
         
         // get conversation messages
-        SKYContainer.defaultContainer().getMessagesWithConversationId(userCon.conversation.recordID.recordName, withLimit: "100", withBeforeTime: NSDate()) { (messages, error) in
-            if error != nil {
-                let alert = UIAlertController(title: "Unable to fetch conversations", message: error.localizedDescription, preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
+        SKYContainer.default().getMessagesWithConversationId(userCon.conversation.recordID.recordName, withLimit: "100", withBeforeTime: Date()) { (messages, error) in
+            if let err = error {
+                let alert = UIAlertController(title: "Unable to fetch conversations", message: err.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
                 return
             }
             
-            if messages != nil {
-                self.messages = messages
+            if let msg = messages {
+                self.messages = msg
                 self.tableView.reloadData()
             }
         }
@@ -90,31 +90,31 @@ class ConversationRoomViewController:
     
     // MARK: - Action
     
-    @IBAction func showDetail(sender: AnyObject) {
-        performSegueWithIdentifier("conversation_detail", sender: userCon)
+    @IBAction func showDetail(_ sender: AnyObject) {
+        self.performSegue(withIdentifier: "conversation_detail", sender: userCon)
     }
 
-    @IBAction func sendMessage(sender: AnyObject) {
+    @IBAction func sendMessage(_ sender: AnyObject) {
         // convert metadata to dictionary
-        var metadateDic:[NSObject:AnyObject]?
-        if let metadata = messageMetadataTextField.text where !metadata.isEmpty {
-            let jsonData = messageMetadataTextField.text!.dataUsingEncoding(NSUTF8StringEncoding)
+        var metadateDic:[AnyHashable: Any]?
+        if let metadata = messageMetadataTextField.text, !metadata.isEmpty {
+            let jsonData = messageMetadataTextField.text!.data(using: String.Encoding.utf8)
             do {
-                metadateDic = try NSJSONSerialization.JSONObjectWithData(jsonData!, options: []) as? [NSObject : AnyObject]
+                metadateDic = try JSONSerialization.jsonObject(with: jsonData!, options: []) as? [AnyHashable: Any]
             } catch let error {
                 print("json error: \(error)")
             }
         }
         
-        SKYContainer.defaultContainer().createMessageWithConversationId(
-            self.userCon.conversation.recordID.recordName,
+        SKYContainer.default().createMessage(
+            withConversationId: self.userCon.conversation.recordID.recordName,
             withBody: messaegBodyTextField.text,
             withMetadata: metadateDic,
-            withAsset: chosenAsset) { (message, error) in
-                if error != nil {
-                    let alert = UIAlertController(title: "Unable to send message", message: error.localizedDescription, preferredStyle: .Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                    self.presentViewController(alert, animated: true, completion: nil)
+            with: chosenAsset) { (message, error) in
+                if let err = error {
+                    let alert = UIAlertController(title: "Unable to send message", message: err.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
                     return
                 }
                 
@@ -124,25 +124,25 @@ class ConversationRoomViewController:
         }
     }
     
-    @IBAction func chooseImageAsset(sender: AnyObject) {
+    @IBAction func chooseImageAsset(_ sender: AnyObject) {
         let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .SavedPhotosAlbum
+        imagePicker.sourceType = .savedPhotosAlbum
         imagePicker.delegate = self
-        self.navigationController?.presentViewController(imagePicker, animated: true, completion: nil)
+        self.navigationController?.present(imagePicker, animated: true, completion: nil)
     }
     
     // MARK: - Table view data source
 
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let message = messages[indexPath.row]
         
         var lastRead = ""
@@ -155,23 +155,23 @@ class ConversationRoomViewController:
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier("message_detail", sender: messages[indexPath.row].dictionary)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.performSegue(withIdentifier: "message_detail", sender: messages[indexPath.row].dictionary)
     }
     
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let unreadAction = UITableViewRowAction(style: UITableViewRowActionStyle.Normal , title: "mark as unread") { (action, indexPath) in
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let unreadAction = UITableViewRowAction(style: UITableViewRowActionStyle.normal , title: "mark as unread") { (action, indexPath) in
             
             let message = self.messages[indexPath.row]
-            SKYContainer.defaultContainer().markAsLastMessageReadWithConversationId(
-                self.userCon.conversation.recordID.recordName,
+            SKYContainer.default().markAsLastMessageRead(
+                withConversationId: self.userCon.conversation.recordID.recordName,
                 withMessageId: message.recordID.recordName,
                 completionHandler: { (userCon, error) in
                     
-                    if error != nil {
-                        let alert = UIAlertController(title: "Unable to mark last read message", message: error.localizedDescription, preferredStyle: .Alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                        self.presentViewController(alert, animated: true, completion: nil)
+                    if let err = error {
+                        let alert = UIAlertController(title: "Unable to mark last read message", message: err.localizedDescription, preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
                         return
                     }
                     
@@ -184,52 +184,57 @@ class ConversationRoomViewController:
     
     // MARK: - Text field delegate
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
     // MARK: - Navigation
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "message_detail" {
-            let controller = segue.destinationViewController as! DictionaryDetailViewController
+            let controller = segue.destination as! DictionaryDetailViewController
             controller.dictionary = sender as! NSDictionary
         } else if segue.identifier == "conversation_detail" {
-            let controller = segue.destinationViewController as! ConversationDetailViewController
+            let controller = segue.destination as! ConversationDetailViewController
             controller.userCon = sender as! SKYUserConversation
         }
     }
     
     func refreshConversation() {
-        SKYContainer.defaultContainer().getUserConversationWithConversationId(self.userCon.conversation.recordID.recordName,
-                                                                          completionHandler: { (conversation, error) in
-                                                                            self.userCon = conversation
-                                                                            self.lastReadMessage = conversation.lastReadMessage
-                                                                            self.tableView.reloadData()
-        })
+        SKYContainer.default().getUserConversation(withConversationId: self.userCon.conversation.recordID.recordName) { (conversation, error) in
+            if let conv = conversation {
+                self.userCon = conv
+                self.lastReadMessage = conv.lastReadMessage
+                self.tableView.reloadData()
+            }
+        }
     }
-    
+
     // MARK: - UIImagePickerControllerDelegate
-    
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        self.navigationController?.dismiss(animated: true, completion: nil)
         guard let image = info[UIImagePickerControllerOriginalImage] as? UIImage else {
             return
         }
         
-        let asset = SKYAsset(data: UIImagePNGRepresentation(image))
-        asset.mimeType = "image/png"
-        SKYContainer.defaultContainer().uploadAsset(asset) { (asset, error) in
-            if error != nil {
-                let alert = UIAlertController(title: "Unable to upload", message: error!.localizedDescription, preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
-                return
+        if let asset = SKYAsset(data: UIImagePNGRepresentation(image)) {
+            asset.mimeType = "image/png"
+            SKYContainer.default().uploadAsset(asset) { (asset, error) in
+                if let err = error {
+                    let alert = UIAlertController(title: "Unable to upload", message: err.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                    return
+                }
+
+                if let ast = asset {
+                    self.chosenAsset = ast
+                    self.chosenAsseTexttLabel.text = ast.description
+                }
             }
-            
-            self.chosenAsset = asset
-            self.chosenAsseTexttLabel.text = asset.description
         }
+
     }
 }

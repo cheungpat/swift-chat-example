@@ -24,22 +24,22 @@ class CreateDirectConversationViewController: UIViewController {
     
     // MARK: - Actions
     
-    @IBAction func createConversation(sneder: AnyObject!) {
-        if var id = userIdTextField.text where !id.isEmpty {
+    @IBAction func createConversation(_ sneder: AnyObject!) {
+        if var id = userIdTextField.text, !id.isEmpty {
             
             if id.hasPrefix("user/") {
-                id = id.substringFromIndex("user/".endIndex)
+                id = id.substring(from: "user/".endIndex)
             }
             
-            SKYContainer.defaultContainer().getOrCreateDirectConversationWithuUserId(id, completionHandler: { (conversation, error) in
-                if error != nil {
-                    let alert = UIAlertController(title: "Unable to create direct conversation", message: error.localizedDescription, preferredStyle: .Alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                    self.presentViewController(alert, animated: true, completion: nil)
+            SKYContainer.default().getOrCreateDirectConversationWithuUserId(id, completionHandler: { (conversation, error) in
+                if let err = error {
+                    let alert = UIAlertController(title: "Unable to create direct conversation", message: err.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
                     return
                 }
-                
-                self.createdConversationTextView.text = conversation.recordID.canonicalString
+
+                self.createdConversationTextView.text = conversation?.recordID.canonicalString
             })
         }
     }
