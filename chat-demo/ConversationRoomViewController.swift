@@ -120,6 +120,8 @@ class ConversationRoomViewController:
                 
                 if message != nil {
                     print("send message successful")
+                    self.messaegBodyTextField.text = ""
+                    self.messageMetadataTextField.text = ""
                 }
         }
     }

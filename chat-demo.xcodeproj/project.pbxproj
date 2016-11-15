@@ -27,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		60E60B6C1DDAE3380099EE13 /* chat-demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "chat-demo.entitlements"; sourceTree = "<group>"; };
 		94746E741D77FF5600E6C378 /* ConversationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
 		94746E761D7804E800E6C378 /* ConversationRoomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConversationRoomViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		94746E781D7819D300E6C378 /* DictionaryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryDetailViewController.swift; sourceTree = "<group>"; };
@@ -92,6 +93,7 @@
 		948E0A331D6EE7B00087F860 /* chat-demo */ = {
 			isa = PBXGroup;
 			children = (
+				60E60B6C1DDAE3380099EE13 /* chat-demo.entitlements */,
 				948E0A341D6EE7B00087F860 /* AppDelegate.swift */,
 				948E0A361D6EE7B00087F860 /* MainViewController.swift */,
 				94746E741D77FF5600E6C378 /* ConversationsViewController.swift */,
@@ -159,6 +161,11 @@
 						DevelopmentTeam = M7HB6C3N6X;
 						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -377,11 +384,12 @@
 			baseConfigurationReference = E8729C45F1E28B4DCC0630F6 /* Pods-chat-demo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "chat-demo/chat-demo.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "chat-demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "io.skygear.chat-demo";
+				PRODUCT_BUNDLE_IDENTIFIER = io.skygear.chat.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -394,11 +402,12 @@
 			baseConfigurationReference = F15374BDDEFF980ACE181E1A /* Pods-chat-demo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "chat-demo/chat-demo.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "chat-demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "io.skygear.chat-demo";
+				PRODUCT_BUNDLE_IDENTIFIER = io.skygear.chat.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
