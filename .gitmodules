@@ -1,0 +1,3 @@
+[submodule "cloud-code/chat"]
+	path = cloud-code/chat
+	url = https://github.com/ben181231/chat.git
