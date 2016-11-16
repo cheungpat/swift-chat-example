@@ -18,25 +18,26 @@ class ConversationsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        SKYContainer.defaultContainer().getUserConversationsCompletionHandler { (userCons, error) in
-            if error != nil {
-                let alert = UIAlertController(title: "Unable to fetch conversations", message: error.localizedDescription, preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
+        SKYContainer.default().getUserConversationsCompletionHandler { (userCons, error) in
+            if let err = error {
+                let alert = UIAlertController(title: "Unable to fetch conversations", message: err.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
                 return
             }
-            
-            // newest should be on top
-            self.userCons = userCons.reverse()
-            self.tableView.reloadData()
+
+            if let cons = userCons {
+                self.userCons = cons.reversed()
+                self.tableView.reloadData()
+            }
         }
     }
     
     // MARK: - Navigation
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "conversation_room" {
-            let controller = segue.destinationViewController as! ConversationRoomViewController
+            let controller = segue.destination as! ConversationRoomViewController
             controller.userCon = sender as! SKYUserConversation
         }
     }
@@ -44,26 +45,26 @@ class ConversationsViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return userCons.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
-        let conversation = userCons[indexPath.row].conversation
-        cell.textLabel?.text = "\(conversation.title)"
-        cell.detailTextLabel?.text = "\(conversation.recordID.canonicalString)"
+        let conversation = userCons[indexPath.row].conversation!
+        cell.textLabel?.text = conversation.title
+        cell.detailTextLabel?.text = conversation.recordID.canonicalString
 
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier("conversation_room", sender: userCons[indexPath.row])
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.performSegue(withIdentifier: "conversation_room", sender: userCons[indexPath.row])
     }
 
 }

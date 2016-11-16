@@ -36,69 +36,69 @@ class CreateGroupConversationViewController:
     
     // MARK: - Actions
 
-    @IBAction func addUserId(sender: AnyObject) {
-        let alert = UIAlertController(title: "Add User", message: "Please enter a user ID.", preferredStyle: .Alert)
-        alert.addTextFieldWithConfigurationHandler { (textField) in
+    @IBAction func addUserId(_ sender: AnyObject) {
+        let alert = UIAlertController(title: "Add User", message: "Please enter a user ID.", preferredStyle: .alert)
+        alert.addTextField { (textField) in
             textField.placeholder = "UserID"
         }
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: nil))
-        alert.addAction(UIAlertAction(title: "Add", style: .Default, handler: { (action) in
-            if var id = alert.textFields?.first?.text where !id.isEmpty {
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (action) in
+            if var id = alert.textFields?.first?.text, !id.isEmpty {
                 if id.hasPrefix("user/") {
-                    id = id.substringFromIndex("user/".endIndex)
+                    id = id.substring(from: "user/".endIndex)
                 }
                 
                 self.userIds.append(id)
-                let indexPath = NSIndexPath(forRow: self.userIds.count-1, inSection: 0)
-                self.userIdTableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+                let indexPath = IndexPath(row: self.userIds.count-1, section: 0)
+                self.userIdTableView.insertRows(at: [indexPath], with: .automatic)
             }
         }))
         alert.preferredAction = alert.actions.last
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
-    @IBAction func createConversation(sneder: AnyObject!) {
+    @IBAction func createConversation(_ sneder: AnyObject!) {
         
         var userIds = self.userIds
         
-        if !userIds.contains(SKYContainer.defaultContainer().currentUserRecordID) {
-            userIds.append(SKYContainer.defaultContainer().currentUserRecordID)
+        if !userIds.contains(SKYContainer.default().currentUserRecordID) {
+            userIds.append(SKYContainer.default().currentUserRecordID)
         }
         
         // let ids be unique
         userIds = Array(Set(userIds))
         
-        SKYContainer.defaultContainer().createConversationWithParticipantIds(userIds, withAdminIds: userIds, withTitle: titleTextField.text) { (conversation, error) in
-            if error != nil {
-                let alert = UIAlertController(title: "Unable to create group conversation", message: error.localizedDescription, preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
+        SKYContainer.default().createConversation(withParticipantIds: userIds, withAdminIds: userIds, withTitle: titleTextField.text) { (conversation, error) in
+            if let err = error {
+                let alert = UIAlertController(title: "Unable to create group conversation", message: err.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
                 return
             }
-            
-            self.createdConversationTextView.text = conversation.recordID.canonicalString
+
+            self.createdConversationTextView.text = conversation?.recordID.canonicalString
         }
     }
     
     // MARK: - Table view data source
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1;
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return userIds.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = userIds[indexPath.row]
         return cell
     }
 
     // MARK: - Text view data source
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }

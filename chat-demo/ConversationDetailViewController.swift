@@ -28,59 +28,56 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
     }
     
     // MARK: - Action
-    @IBAction func addParticipant(sender: AnyObject) {
-        if let id = participantTextField.text where !id.isEmpty {
-            SKYContainer.defaultContainer().addParticipantsWithConversationId(
-                userCon.conversation.recordID.recordName,
-                withParticipantIds: [id],
-                completionHandler: { (conversation, error) in
-                    
-                    if error != nil {
-                        let alert = UIAlertController(title: "Unable to add user to participant.", message: error.localizedDescription, preferredStyle: .Alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                        self.presentViewController(alert, animated: true, completion: nil)
-                        return
-                    }
-                    
-                    self.refreshConversation()
-            })
+    @IBAction func addParticipant(_ sender: AnyObject) {
+        if let id = participantTextField.text, !id.isEmpty {
+            SKYContainer.default().addParticipants(
+                withConversationId: userCon.conversation.recordID.recordName,
+                withParticipantIds: [id]
+            ){ (conversation, error) in
+
+                if let err = error {
+                    let alert = UIAlertController(title: "Unable to add user to participant.", message: err.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                    return
+                }
+
+                self.refreshConversation()
+            }
         }
     }
 
-    @IBAction func removeParticipant(sender: AnyObject) {
-        if let id = participantTextField.text where !id.isEmpty {
-            SKYContainer.defaultContainer().removeParticipantsWithConversationId(
-                userCon.conversation.recordID.recordName,
-                withParticipantIds: [id],
-                completionHandler: { (conversation, error) in
-                    
-                    if error != nil {
-                        let alert = UIAlertController(title: "Unable to remove user from participant.", message: error.localizedDescription, preferredStyle: .Alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                        self.presentViewController(alert, animated: true, completion: nil)
-                        return
-                    }
-                    
-                    self.refreshConversation()
-            })
+    @IBAction func removeParticipant(_ sender: AnyObject) {
+        if let id = participantTextField.text, !id.isEmpty {
+            SKYContainer.default().removeParticipants(
+                withConversationId: userCon.conversation.recordID.recordName,
+                withParticipantIds: [id]) { (conversation, error) in
+                if let err = error {
+                    let alert = UIAlertController(title: "Unable to remove user from participant.", message: err.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                    return
+                }
+
+                self.refreshConversation()
+            }
         }
     }
-    
+
     func refreshConversation() {
-        SKYContainer.defaultContainer().getUserConversationWithConversationId(self.userCon.conversation.recordID.recordName,
-                                                                          completionHandler: { (conversation, error) in
-                                                                            self.userCon = conversation
-                                                                            self.tableView.reloadData()
-        })
+        SKYContainer.default().getUserConversation(withConversationId: self.userCon.conversation.recordID.recordName) { (conversation, error) in
+            self.userCon = conversation
+            self.tableView.reloadData()
+        }
     }
-    
+
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case unreadMessageCount:
             return 1
@@ -93,7 +90,7 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
         }
     }
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case unreadMessageCount:
             return "Unread Count"
@@ -106,18 +103,18 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
         }
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case unreadMessageCount:
-            let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             cell.textLabel?.text = "\(userCon.unreadCount)"
             return cell
         case participantIdsSection:
-            let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             cell.textLabel?.text = userCon.conversation.participantIds[indexPath.row]
             return cell
         case adminIdsSection:
-            let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
             cell.textLabel?.text = userCon.conversation.adminIds[indexPath.row]
             return cell
         default:
@@ -125,28 +122,28 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
         }
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case participantIdsSection:
-            performSegueWithIdentifier("showDetail", sender: userCon.conversation.participantIds[indexPath.row])
+            self.performSegue(withIdentifier: "showDetail", sender: userCon.conversation.participantIds[indexPath.row])
         case adminIdsSection:
-            performSegueWithIdentifier("showDetail", sender: userCon.conversation.adminIds[indexPath.row])
+            self.performSegue(withIdentifier: "showDetail", sender: userCon.conversation.adminIds[indexPath.row])
         default: break
         }
     }
     
     // MARK: - Text Field delegate
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
     // MARK: - Navigation
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showDetail" {
-            let controller = segue.destinationViewController as! DetailViewController
+            let controller = segue.destination as! DetailViewController
             controller.detailText = sender as! String
         }
     }

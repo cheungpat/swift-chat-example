@@ -10,30 +10,40 @@ PODS:
   - FMDB (2.6.2):
     - FMDB/standard (= 2.6.2)
   - FMDB/standard (2.6.2)
-  - SKYKit (0.17.0):
-    - SKYKit/Core (= 0.17.0)
-  - SKYKit/Chat (0.17.0):
+  - SKYKit (0.19.0):
+    - SKYKit/Core (= 0.19.0)
+  - SKYKit/Chat (0.19.0):
     - SKYKit/Core
-  - SKYKit/Core (0.17.0):
+  - SKYKit/Core (0.19.0):
     - FMDB (~> 2.5)
     - SocketRocket (~> 0.4)
-  - SKYKit/Facebook (0.17.0):
+  - SKYKit/Facebook (0.19.0):
     - FBSDKCoreKit (~> 4.0)
     - SKYKit/Core
   - SocketRocket (0.5.1)
 
 DEPENDENCIES:
-  - SKYKit (~> 0.17.0)
-  - SKYKit/Chat (~> 0.17.0)
-  - SKYKit/Facebook (~> 0.17.0)
+  - SKYKit (from `https://github.com/skygearIO/skygear-SDK-iOS.git`, commit `4af092d`)
+  - SKYKit/Chat (from `https://github.com/skygearIO/skygear-SDK-iOS.git`, commit `4af092d`)
+  - SKYKit/Facebook (from `https://github.com/skygearIO/skygear-SDK-iOS.git`, commit `4af092d`)
+
+EXTERNAL SOURCES:
+  SKYKit:
+    :commit: 4af092d
+    :git: https://github.com/skygearIO/skygear-SDK-iOS.git
+
+CHECKOUT OPTIONS:
+  SKYKit:
+    :commit: 4af092d
+    :git: https://github.com/skygearIO/skygear-SDK-iOS.git
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   FBSDKCoreKit: fc7fa53d16b095ee3fd53f0cd59f1df8bcbb634d
   FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
-  SKYKit: 56fe4b349881499a721e95d26fbe94922f42be26
+  SKYKit: 4554ffca7cf709a9b03b88bb680d9648526c0167
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
 
-PODFILE CHECKSUM: fb867adc23d3a20fdcffed910bc34d07cf1e5c04
+PODFILE CHECKSUM: 7b60ab77fd412bfe7715a9097be21e051d71020b
 
 COCOAPODS: 1.1.1

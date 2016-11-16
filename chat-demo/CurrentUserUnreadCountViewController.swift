@@ -23,33 +23,36 @@ class CurrentUserUnreadCountViewController: UITableViewController {
         super.viewDidLoad()
         
         // SDK should implement get total unread
-        SKYContainer.defaultContainer().getTotalUnreadCount { (response, error) in
-            if (error != nil) {
-                let alert = UIAlertController(title: "Unable to get unread count", message: error.localizedDescription, preferredStyle: .Alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
+        SKYContainer.default().getTotalUnreadCount { (response, error) in
+            if let err = error {
+                let alert = UIAlertController(title: "Unable to get unread count", message: err.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
                 return
             }
-            
-            self.unreadConversationCount = response["conversation"] as? Int
-            self.unreadMessageCount = response["message"] as? Int
-            
-            self.tableView.reloadData()
+
+            if let resp = response {
+                self.unreadConversationCount = resp["conversation"] as? Int
+                self.unreadMessageCount = resp["message"] as? Int
+
+                self.tableView.reloadData()
+            }
+
         }
     }
     
     // MARK: - Table view data source
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 2
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("plain", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "plain", for: indexPath)
         switch indexPath.row {
         case self.unreadConversationCountRowIndex:
             cell.textLabel?.text = "Conversation"
