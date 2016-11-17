@@ -29,10 +29,10 @@ services:
       PY_PATH: http://py:8000
       JS_TRANSPORT: http
       JS_PATH: http://js:9000
-      APNS_ENABLE: "YES"
+      APNS_ENABLE: "NO" # SET THIS TO YES AFTER FILL IN APNS_CERTIFICATE AND APNS_PRIVATE_KEY
       APNS_ENV: sandbox
-      APNS_CERTIFICATE: #TO BE FILL IN
-      APNS_PRIVATE_KEY: #TO BE FILL IN
+      APNS_CERTIFICATE: # TO BE FILL IN
+      APNS_PRIVATE_KEY: # TO BE FILL IN
 
   js:
     image: skygeario/skygear-node:canary

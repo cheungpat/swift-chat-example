@@ -1,3 +1,3 @@
-[submodule "cloud-code/chat"]
-	path = cloud-code/chat
+[submodule "cloud_code/chat"]
+	path = cloud_code/chat
 	url = https://github.com/SkygearIO/chat.git
