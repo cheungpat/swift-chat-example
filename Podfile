@@ -4,8 +4,8 @@
 use_frameworks!
 
 target 'chat-demo' do
-    pod 'SKYKit', :git => 'https://github.com/skygearIO/skygear-SDK-iOS.git', :commit => '4af092d'
-    pod 'SKYKit/Chat', :git => 'https://github.com/skygearIO/skygear-SDK-iOS.git', :commit => '4af092d'
-    pod 'SKYKit/Facebook', :git => 'https://github.com/skygearIO/skygear-SDK-iOS.git', :commit => '4af092d'
+    pod 'SKYKit', :git => 'https://github.com/SkygearIO/skygear-SDK-iOS.git', :commit => '371a133'
+    pod 'SKYKitChat', :git => 'https://github.com/SkygearIO/chat-SDK-iOS.git'
+    pod 'SKYKit/Facebook', :git => 'https://github.com/SkygearIO/skygear-SDK-iOS.git', :commit => '371a133'
 end
 
