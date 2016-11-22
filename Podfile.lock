@@ -25,13 +25,14 @@ PODS:
 DEPENDENCIES:
   - SKYKit (from `https://github.com/SkygearIO/skygear-SDK-iOS.git`, commit `371a133`)
   - SKYKit/Facebook (from `https://github.com/SkygearIO/skygear-SDK-iOS.git`, commit `371a133`)
-  - SKYKitChat (from `https://github.com/SkygearIO/chat-SDK-iOS.git`)
+  - SKYKitChat (from `https://github.com/SkygearIO/chat-SDK-iOS.git`, commit `1277777`)
 
 EXTERNAL SOURCES:
   SKYKit:
     :commit: 371a133
     :git: https://github.com/SkygearIO/skygear-SDK-iOS.git
   SKYKitChat:
+    :commit: '1277777'
     :git: https://github.com/SkygearIO/chat-SDK-iOS.git
 
 CHECKOUT OPTIONS:
@@ -39,7 +40,7 @@ CHECKOUT OPTIONS:
     :commit: 371a133
     :git: https://github.com/SkygearIO/skygear-SDK-iOS.git
   SKYKitChat:
-    :commit: 1277777a9d46afadbfa0d9a8f875850d963eff13
+    :commit: '1277777'
     :git: https://github.com/SkygearIO/chat-SDK-iOS.git
 
 SPEC CHECKSUMS:
@@ -50,6 +51,6 @@ SPEC CHECKSUMS:
   SKYKitChat: 1b6271a661cd0a62f6e9b4da855d114b113c2a05
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
 
-PODFILE CHECKSUM: 6e97057c51406a5652642df7a0050ebe8286802a
+PODFILE CHECKSUM: 69a2e3e3dbcdd08bed6618e557cc227daeaa5a73
 
 COCOAPODS: 1.1.1
