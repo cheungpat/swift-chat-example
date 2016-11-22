@@ -5,45 +5,51 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
-  - FBSDKCoreKit (4.15.1):
+  - FBSDKCoreKit (4.17.0):
     - Bolts (~> 1.7)
   - FMDB (2.6.2):
     - FMDB/standard (= 2.6.2)
   - FMDB/standard (2.6.2)
   - SKYKit (0.19.0):
     - SKYKit/Core (= 0.19.0)
-  - SKYKit/Chat (0.19.0):
-    - SKYKit/Core
   - SKYKit/Core (0.19.0):
     - FMDB (~> 2.5)
     - SocketRocket (~> 0.4)
   - SKYKit/Facebook (0.19.0):
     - FBSDKCoreKit (~> 4.0)
     - SKYKit/Core
+  - SKYKitChat (0.1.0):
+    - SKYKit (~> 0.19.0)
   - SocketRocket (0.5.1)
 
 DEPENDENCIES:
-  - SKYKit (from `https://github.com/skygearIO/skygear-SDK-iOS.git`, commit `4af092d`)
-  - SKYKit/Chat (from `https://github.com/skygearIO/skygear-SDK-iOS.git`, commit `4af092d`)
-  - SKYKit/Facebook (from `https://github.com/skygearIO/skygear-SDK-iOS.git`, commit `4af092d`)
+  - SKYKit (from `https://github.com/SkygearIO/skygear-SDK-iOS.git`, commit `4af092d`)
+  - SKYKit/Facebook (from `https://github.com/SkygearIO/skygear-SDK-iOS.git`, commit `4af092d`)
+  - SKYKitChat (from `https://github.com/SkygearIO/chat-SDK-iOS.git`)
 
 EXTERNAL SOURCES:
   SKYKit:
     :commit: 4af092d
-    :git: https://github.com/skygearIO/skygear-SDK-iOS.git
+    :git: https://github.com/SkygearIO/skygear-SDK-iOS.git
+  SKYKitChat:
+    :git: https://github.com/SkygearIO/chat-SDK-iOS.git
 
 CHECKOUT OPTIONS:
   SKYKit:
     :commit: 4af092d
-    :git: https://github.com/skygearIO/skygear-SDK-iOS.git
+    :git: https://github.com/SkygearIO/skygear-SDK-iOS.git
+  SKYKitChat:
+    :commit: 1277777a9d46afadbfa0d9a8f875850d963eff13
+    :git: https://github.com/SkygearIO/chat-SDK-iOS.git
 
 SPEC CHECKSUMS:
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  FBSDKCoreKit: fc7fa53d16b095ee3fd53f0cd59f1df8bcbb634d
+  FBSDKCoreKit: 30a21d2d7b92984b3d80497113433c00824c35e9
   FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
   SKYKit: 4554ffca7cf709a9b03b88bb680d9648526c0167
+  SKYKitChat: 1b6271a661cd0a62f6e9b4da855d114b113c2a05
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
 
-PODFILE CHECKSUM: 7b60ab77fd412bfe7715a9097be21e051d71020b
+PODFILE CHECKSUM: d8c62fd489c103c4fac7e31bd03b357e753a447a
 
 COCOAPODS: 1.1.1

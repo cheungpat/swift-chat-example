@@ -8,6 +8,7 @@
 
 import UIKit
 import SKYKit
+import SKYKitChat
 
 class ConversationRoomViewController:
     UIViewController,
