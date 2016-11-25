@@ -19,7 +19,7 @@ class ConversationsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        SKYContainer.default().getUserConversationsCompletionHandler { (userCons, error) in
+        SKYContainer.default().chatExtension().fetchUserConversations { (userCons, error) in
             if let err = error {
                 let alert = UIAlertController(title: "Unable to fetch conversations", message: err.localizedDescription, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -57,7 +57,7 @@ class ConversationsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
-        let conversation = userCons[indexPath.row].conversation!
+        let conversation = userCons[indexPath.row].conversation
         cell.textLabel?.text = conversation.title
         cell.detailTextLabel?.text = conversation.recordID.canonicalString
 

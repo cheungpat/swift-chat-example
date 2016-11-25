@@ -31,11 +31,10 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
     // MARK: - Action
     @IBAction func addParticipant(_ sender: AnyObject) {
         if let id = participantTextField.text, !id.isEmpty {
-            SKYContainer.default().addParticipants(
-                withConversationId: userCon.conversation.recordID.recordName,
-                withParticipantIds: [id]
+            SKYContainer.default().chatExtension().addParticipants(
+                userIDs: [id],
+                to: userCon.conversation
             ){ (conversation, error) in
-
                 if let err = error {
                     let alert = UIAlertController(title: "Unable to add user to participant.", message: err.localizedDescription, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -50,9 +49,10 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
 
     @IBAction func removeParticipant(_ sender: AnyObject) {
         if let id = participantTextField.text, !id.isEmpty {
-            SKYContainer.default().removeParticipants(
-                withConversationId: userCon.conversation.recordID.recordName,
-                withParticipantIds: [id]) { (conversation, error) in
+            SKYContainer.default().chatExtension().removeParticipants(
+                userIDs: [id],
+                from: userCon.conversation
+            ){ (conversation, error) in
                 if let err = error {
                     let alert = UIAlertController(title: "Unable to remove user from participant.", message: err.localizedDescription, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -66,7 +66,7 @@ class ConversationDetailViewController: UITableViewController, UITextFieldDelega
     }
 
     func refreshConversation() {
-        SKYContainer.default().getUserConversation(withConversationId: self.userCon.conversation.recordID.recordName) { (conversation, error) in
+        SKYContainer.default().chatExtension().fetchUserConversation(id: self.userCon.conversation.recordID.recordName) { (conversation, error) in
             self.userCon = conversation
             self.tableView.reloadData()
         }

@@ -59,14 +59,18 @@ class ConversationRoomViewController:
             
         }
         
+        guard let chat = SKYContainer.default().chatExtension() else {
+            NSLog("No chat extension")
+            return
+        }
+
         // subscribe chat messages
         // FIXME: SDK should help deserialize SKYMessage?
-        SKYContainer.default().subscribeHandler({ (dictionary) in
-            if let dict = dictionary,
-                let recordType = dict["record_type"] as? String, recordType == "message",
+        chat.subscribeHandler({ (dict) in
+            if let recordType = dict["record_type"] as? String, recordType == "message",
                 let recordDic = dict["record"] as? [AnyHashable: Any],
                 let record = SKYRecordDeserializer().record(with: recordDic),
-                let message = SKYMessage(record: record), message.conversationID == self.userCon.conversation.recordID.recordName {
+                let message = SKYMessage(record: record), message.conversationID == self.userCon.conversation.recordID {
                 
                 self.messages.insert(message, at: 0)
                 self.tableView.insertRows(at: [IndexPath.init(row: 0, section: 0)], with: .automatic)
@@ -74,7 +78,7 @@ class ConversationRoomViewController:
         })
         
         // get conversation messages
-        SKYContainer.default().getMessagesWithConversationId(userCon.conversation.recordID.recordName, withLimit: "100", withBeforeTime: Date()) { (messages, error) in
+        chat.fetchMessages(conversation: userCon.conversation, limit: 100, beforeTime: Date()) { (messages, error) in
             if let err = error {
                 let alert = UIAlertController(title: "Unable to fetch conversations", message: err.localizedDescription, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -83,6 +87,9 @@ class ConversationRoomViewController:
             }
             
             if let msg = messages {
+                chat.markDeliveredMessages(msg, completion: nil);
+                chat.markReadMessages(msg, completion: nil);
+                
                 self.messages = msg
                 self.tableView.reloadData()
             }
@@ -97,21 +104,24 @@ class ConversationRoomViewController:
 
     @IBAction func sendMessage(_ sender: AnyObject) {
         // convert metadata to dictionary
-        var metadateDic:[AnyHashable: Any]?
+        var metadateDic:[String: Any]?
         if let metadata = messageMetadataTextField.text, !metadata.isEmpty {
             let jsonData = messageMetadataTextField.text!.data(using: String.Encoding.utf8)
             do {
-                metadateDic = try JSONSerialization.jsonObject(with: jsonData!, options: []) as? [AnyHashable: Any]
+                metadateDic = try JSONSerialization.jsonObject(with: jsonData!, options: []) as? [String: Any]
             } catch let error {
                 print("json error: \(error)")
             }
         }
         
-        SKYContainer.default().createMessage(
-            withConversationId: self.userCon.conversation.recordID.recordName,
-            withBody: messaegBodyTextField.text,
-            withMetadata: metadateDic,
-            with: chosenAsset) { (message, error) in
+        guard let message = SKYMessage() else {
+            print("cannot create message")
+            return
+        }
+        message.body = messaegBodyTextField.text
+        message.metadata = metadateDic
+        message.attachment = chosenAsset
+        SKYContainer.default().chatExtension().addMessage(message, to: userCon.conversation) { (message, error) in
                 if let err = error {
                     let alert = UIAlertController(title: "Unable to send message", message: err.localizedDescription, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -152,9 +162,10 @@ class ConversationRoomViewController:
         if lastReadMessage != nil && lastReadMessage?.recordID.recordName == message.recordID.recordName {
             lastRead = "  === last read message ==="
         }
-        cell.textLabel?.text = message.body + lastRead
+        let messageBody = message.body != nil ? message.body! : "";
+        cell.textLabel?.text = messageBody + lastRead
         cell.detailTextLabel?.text = message.recordID.canonicalString
-
+        
         return cell
     }
     
@@ -166,10 +177,8 @@ class ConversationRoomViewController:
         let unreadAction = UITableViewRowAction(style: UITableViewRowActionStyle.normal , title: "mark as unread") { (action, indexPath) in
             
             let message = self.messages[indexPath.row]
-            SKYContainer.default().markAsLastMessageRead(
-                withConversationId: self.userCon.conversation.recordID.recordName,
-                withMessageId: message.recordID.recordName,
-                completionHandler: { (userCon, error) in
+            SKYContainer.default().chatExtension().markLastReadMessage(message,
+                                                            in: self.userCon) { (userCon, error) in
                     
                     if let err = error {
                         let alert = UIAlertController(title: "Unable to mark last read message", message: err.localizedDescription, preferredStyle: .alert)
@@ -179,7 +188,7 @@ class ConversationRoomViewController:
                     }
                     
                     self.refreshConversation()
-            })
+            }
         }
         
         return [unreadAction]
@@ -205,7 +214,7 @@ class ConversationRoomViewController:
     }
     
     func refreshConversation() {
-        SKYContainer.default().getUserConversation(withConversationId: self.userCon.conversation.recordID.recordName) { (conversation, error) in
+        SKYContainer.default().chatExtension().fetchUserConversation(id: self.userCon.conversation.recordID.recordName) { (conversation, error) in
             if let conv = conversation {
                 self.userCon = conv
                 self.lastReadMessage = conv.lastReadMessage

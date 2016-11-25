@@ -8,6 +8,7 @@
 
 import UIKit
 import SKYKit
+import SKYKitChat
 
 class CurrentUserUnreadCountViewController: UITableViewController {
     
@@ -23,7 +24,7 @@ class CurrentUserUnreadCountViewController: UITableViewController {
         super.viewDidLoad()
         
         // SDK should implement get total unread
-        SKYContainer.default().getTotalUnreadCount { (response, error) in
+        SKYContainer.default().chatExtension().fetchTotalUnreadCount { (response, error) in
             if let err = error {
                 let alert = UIAlertController(title: "Unable to get unread count", message: err.localizedDescription, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -32,8 +33,8 @@ class CurrentUserUnreadCountViewController: UITableViewController {
             }
 
             if let resp = response {
-                self.unreadConversationCount = resp["conversation"] as? Int
-                self.unreadMessageCount = resp["message"] as? Int
+                self.unreadConversationCount = resp[SKYChatConversationUnreadCountKey] as? Int
+                self.unreadMessageCount = resp[SKYChatMessageUnreadCountKey] as? Int
 
                 self.tableView.reloadData()
             }
